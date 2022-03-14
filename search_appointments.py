@@ -65,15 +65,17 @@ if __name__ == "__main__":
         description="A script that searches appointments for passport in Paris",
     )
     parser.add_argument("--disable-notification", action="store_true")
+    parser.add_argument("--days", help="Number of days in the future to look for", type=int, default=14)
 
     args = parser.parse_args()
 
+    print(f"Looking for appointments in the next {args.days} days")
     should_continue = True
     while should_continue:
         time.sleep(10)
         soup = request_website()
         next_available_appointments = extract_next_next_available_appointments(soup)
-        filtered_appointments = filter_next_x_days(next_available_appointments, 14)
+        filtered_appointments = filter_next_x_days(next_available_appointments, args.days)
 
         if filtered_appointments:
             for location, slots in filtered_appointments.items():
